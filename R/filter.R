@@ -13,6 +13,7 @@
 #'             a super root will be automatically added.
 #' @param leaves A vector of leaf terms. Only these with their ancestor terms will be kept.
 #' @param mcols_filter Filtering on columns in the meta data frame.
+#' @param namespace The prefix before ":" of the term IDs.
 #' 
 #' @details If the DAG is reduced into several disconnected parts after the filtering, a
 #'          super root is automatically added.
@@ -33,7 +34,7 @@
 #' dag_filter(dag, relations = "is_a")
 #' }
 dag_filter = function(dag, terms = NULL, relations = NULL, root = NULL, leaves = NULL,
-	mcols_filter = NULL) {
+	mcols_filter = NULL, namespace = NULL) {
 
 	lt_children = dag@lt_children
 	children = unlist(lt_children)
@@ -104,6 +105,10 @@ dag_filter = function(dag, terms = NULL, relations = NULL, root = NULL, leaves =
 				l = l & l2
 			}
 		}
+	}
+
+	if(!is.null(namespace)) {
+		l = l & grepl( paste0("^", namespace, ":"), dag@terms, ignore.case = TRUE)
 	}
 
 	if(!any(l)) {

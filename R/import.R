@@ -491,6 +491,8 @@ import_owl = function(file, relation_type = character(0), inherit_relations = TR
 	value = .owl_get_attr(Class, ".//rdfs:subClassOf/owl:Restriction/*[self::owl:someValuesFrom or self::owl:allValuesFrom or self::owl:onClass]", "resource")
 	property = .owl_get_attr(Class, ".//rdfs:subClassOf/owl:Restriction/*[self::owl:someValuesFrom or self::owl:allValuesFrom or self::owl:onClass]/preceding-sibling::owl:onProperty", "resource")
 
+	short_id = gsub("_(?!.*_.*)", ":", short_id, perl = TRUE)
+
 	ns = xml_ns(owl)
 	obo_ns = names(ns)[ns == "http://purl.obolibrary.org/obo/"]
 	oboInOwl_ns = names(ns)[ns == "http://www.geneontology.org/formats/oboInOwl#"]

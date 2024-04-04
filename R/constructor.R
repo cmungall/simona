@@ -288,6 +288,7 @@ create_ontology_DAG = function(parents, children, relations = NULL, relations_DA
 			dag = ontology_DAG(
 				terms = terms,
 				n_terms = length(terms),
+				n_relations = sum(vapply(lt_children, length, FUN.VALUE = integer(1))),
 				lt_parents = lt_parents,
 				lt_children = lt_children,
 				lt_children_relations = lt_relations, 

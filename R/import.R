@@ -294,13 +294,9 @@ process_obo_stanza = function(ln, relation_type = "part_of") {
 	lt$relationship = character(0)
 	i = grep("^is_a:", ln)
 	if(length(i)) {
-		l = grepl("^is_a: (\\S+)\\s+\\{.*\\}\\s*", ln[i])
-		i = i[l]
-		if(length(i)) {
-			is_a = gsub("^is_a: (\\S+)(\\s*.*)$", "\\1", ln[i])
-			is_a = unique(is_a)
-			lt$relationship = c(lt$relationship, structure(is_a, names = rep("is_a", length(is_a))))
-		}
+		is_a = gsub("^is_a: (\\S+)\\b.*$", "\\1", ln[i])
+		is_a = unique(is_a)
+		lt$relationship = c(lt$relationship, structure(is_a, names = rep("is_a", length(is_a))))
 	}
 
 	i = grep("^relationship:", ln)

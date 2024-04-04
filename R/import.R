@@ -94,7 +94,6 @@ import_obo = function(file, relation_type = character(0), inherit_relations = TR
 		relations_DAG = NULL
 	}
 
-
 	### term ###
 	ind1 = grep("^\\[Term\\]$", ln)
 	ind2 = cpp_match_index(ind1, ind_stanza[-1]-1)
@@ -296,11 +295,11 @@ process_obo_stanza = function(ln, relation_type = "part_of") {
 	i = grep("^is_a:", ln)
 	if(length(i)) {
 		l = grepl("^is_a: (\\S+)\\s+\\{.*\\}\\s*", ln[i])
-		i = i[!l]
+		i = i[l]
 		if(length(i)) {
 			is_a = gsub("^is_a: (\\S+)(\\s*.*)$", "\\1", ln[i])
 			is_a = unique(is_a)
-			lt$relationship = lt$relationship = c(lt$relationship, structure(is_a, names = rep("is_a", length(is_a))))
+			lt$relationship = c(lt$relationship, structure(is_a, names = rep("is_a", length(is_a))))
 		}
 	}
 
@@ -633,7 +632,8 @@ import_ontology = function(file, robot_jar = simona_opt$robot_jar, JAVA_ARGS = "
 
 	if(is.null(robot_jar)) {
 		message("`robot_jar` was not set. Download `robot.jar` from GitHub...")
-		download_robot()
+		download_robot(verbose = verbose)
+		robot_jar = simona_opt$robot_jar
 		# stop_wrap("'robot.jar' has not been set. It can be downloaded from https://github.com/ontodev/robot/releases and set by simona_opt$robot_jar = ...")
 	}
 
@@ -752,7 +752,7 @@ import_ttl = function(file, relation_type = "part_of", verbose = simona_opt$verb
 }
 
 
-download_robot = function() {
+download_robot = function(verbose = TRUE) {
 
 	check_pkg("jsonlite", bioc = FALSE)
 
@@ -762,9 +762,8 @@ download_robot = function() {
 	tb = jsonlite::fromJSON(paste0("https://api.github.com/repos/ontodev/robot/releases/", id, "/assets"))
 	url = tb[1, "browser_download_url"]
 
-
 	temp = tempfile(pattern = "robot_temp_", fileext = ".jar")
-	download.file(url, destfile = temp)
+	download.file(url, destfile = temp, quiet = !verbose)
 	simona_opt$robot_jar = temp
 }
 

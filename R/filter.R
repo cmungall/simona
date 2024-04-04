@@ -58,6 +58,9 @@ dag_filter = function(dag, terms = NULL, relations = NULL, root = NULL, leaves =
 
 	l = rep(TRUE, length(parents))
 
+	if(!is.null(namespace)) {
+		terms = c(terms, grep( paste0("^", namespace, ":"), dag@terms, ignore.case = TRUE, value = TRUE))
+	}
 	if(!is.null(terms)) {
 		terms = term_to_node_id(dag, terms)
 		l = l & parents %in% terms & children %in% terms
@@ -105,10 +108,6 @@ dag_filter = function(dag, terms = NULL, relations = NULL, root = NULL, leaves =
 				l = l & l2
 			}
 		}
-	}
-
-	if(!is.null(namespace)) {
-		l = l & grepl( paste0("^", namespace, ":"), dag@terms, ignore.case = TRUE)
 	}
 
 	if(!any(l)) {
